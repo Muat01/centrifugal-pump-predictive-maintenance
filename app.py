@@ -62,7 +62,7 @@ if df is not None:
         df.loc[df.index[-1], 'vibration_mms'] = sim_vibration
         df.loc[df.index[-1], 'status'] = 'Leakage' if sim_pressure < 100 or sim_vibration > 3.0 else 'Normal'
 
-    # 4. Key Performance Indicators (KPIs) with Plotly Gauges / Metrics
+    # 4. Key Performance Indicators (KPIs)
     latest_row = df.iloc[-1]
     
     col1, col2, col3, col4 = st.columns(4)
@@ -96,26 +96,24 @@ if df is not None:
 
     st.markdown("---")
 
-    # 5. Interactive Advanced Charts using Plotly
+    # 5. Interactive Advanced Charts using Plotly (Fixed line parameter syntax)
     st.subheader("📈 Real-time Industrial IoT Sensor Telemetry (Time-Series)")
     
-    # Plotly Interactive Subplots / Multi-axis
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
         x=df['timestamp'], y=df['pressure_psi'],
-        name='Pressure (psi)', line=f"color='#00d2d3' width=2"
+        name='Pressure (psi)', line=dict(color='#00d2d3', width=2)
     ))
     fig.add_trace(go.Scatter(
         x=df['timestamp'], y=df['flow_gpm'],
-        name='Flow (gpm)', line=f"color='#ff9f43' width=2", yaxis="y2"
+        name='Flow (gpm)', line=dict(color='#ff9f43', width=2), yaxis="y2"
     ))
     fig.add_trace(go.Scatter(
         x=df['timestamp'], y=df['vibration_mms'],
-        name='Vibration (mm/s)', line=f"color='#ff6b6b' width=2", yaxis="y3"
+        name='Vibration (mm/s)', line=dict(color='#ff6b6b', width=2), yaxis="y3"
     ))
 
-    # Layout styling for dark mode scada feel
     fig.update_layout(
         template="plotly_dark",
         height=500,
@@ -127,7 +125,6 @@ if df is not None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     
-    # Highlight anomaly point
     leakage_df = df[df['status'] == 'Leakage']
     if not leakage_df.empty:
         fig.add_vline(x=leakage_df['timestamp'].iloc[0], line_width=2, line_dash="dash", line_color="red", annotation_text="Anomaly Detected")
