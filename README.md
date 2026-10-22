@@ -4,12 +4,13 @@ A Smart Manufacturing / Industry 4.0 portfolio project that simulates centrifuga
 
 > **Project status:** Portfolio demonstration using CSV-based historical telemetry and simulated manual overrides. It is not connected to a live PLC/SCADA system and is not a safety-rated monitoring or control application.
 
-## Dashboard Preview
+## 🚀 Live Dashboard
 
-<!-- Add a dashboard screenshot to the repository, then update this path. -->
-![[PumpSense SCADA Dashboard](docs/dashboard-screenshot.png](https://centrifugal-pump-predictive-maintenance.streamlit.app/))
+**[Open the Centrifugal Pump Predictive Maintenance Dashboard](https://centrifugal-pump-predictive-maintenance.streamlit.app/)**
 
-*Tip: Upload a screenshot of the running Streamlit dashboard to `docs/dashboard-screenshot.png`, or replace the image path above with the actual screenshot path in this repository.*
+Explore the interactive SCADA dashboard featuring real-time-style sensor monitoring, pressure/flow/vibration trends, Random Forest classification, and AI-assisted diagnostic recommendations.
+
+[![Open Live Dashboard](https://img.shields.io/badge/Streamlit-Open%20Live%20Dashboard-FF4B4B?logo=streamlit&logoColor=white)](https://centrifugal-pump-predictive-maintenance.streamlit.app/)
 
 ## Project Overview
 
