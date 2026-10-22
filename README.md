@@ -7,7 +7,7 @@ A Smart Manufacturing / Industry 4.0 portfolio project that simulates centrifuga
 ## Dashboard Preview
 
 <!-- Add a dashboard screenshot to the repository, then update this path. -->
-![PumpSense SCADA Dashboard](docs/dashboard-screenshot.png)
+![[PumpSense SCADA Dashboard](docs/dashboard-screenshot.png](https://centrifugal-pump-predictive-maintenance.streamlit.app/))
 
 *Tip: Upload a screenshot of the running Streamlit dashboard to `docs/dashboard-screenshot.png`, or replace the image path above with the actual screenshot path in this repository.*
 
