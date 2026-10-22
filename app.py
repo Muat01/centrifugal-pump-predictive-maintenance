@@ -9,18 +9,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling for SCADA Dark Mode
-st.markdown("""
-    <style>
-    .main { background-color: #0e1117; color: #ffffff; }
-    .stMetric { background-color: #1a1c24; padding: 15px; border-radius: 10px; border: 1px solid #2f3640; }
-    </style>
-""", unsafe_allow_html=True)
-
-st.title("🏭 Smart Factory Control Center")
-st.markdown("### **Unit 4: Centrifugal Pump Predictive Maintenance & Real-time SCADA**")
-st.markdown("---")
-
 # 2. Load Data
 @st.cache_data
 def load_data():
@@ -51,6 +39,11 @@ if df is not None:
         df.loc[df.index[-1], 'vibration_mms'] = sim_vibration
         df.loc[df.index[-1], 'status'] = 'Leakage' if sim_pressure < 100 or sim_vibration > 3.0 else 'Normal'
 
+    # Main Header
+    st.title("🏭 Smart Factory Control Center")
+    st.markdown("### **Unit 4: Centrifugal Pump Predictive Maintenance & Real-time SCADA**")
+    st.markdown("---")
+
     # 3. KPIs
     latest_row = df.iloc[-1]
     col1, col2, col3, col4 = st.columns(4)
@@ -68,23 +61,22 @@ if df is not None:
 
     st.markdown("---")
 
-    # 4. Interactive Plotly Charts (Stable & Clean)
-    st.subheader("📈 Real-time Industrial IoT Sensor Telemetry (Interactive)")
+    # 4. Interactive Plotly Charts (Dark Mode Native)
+    st.subheader("📈 Real-time Industrial IoT Sensor Telemetry")
 
-    # Create individual interactive charts using Plotly Express for maximum stability and beauty
     fig_pressure = px.line(df, x='timestamp', y='pressure_psi', title="Pressure Sensor Tracking (psi)", template="plotly_dark")
     fig_pressure.update_traces(line_color='#00d2d3', line_width=2)
-    fig_pressure.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+    fig_pressure.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
     st.plotly_chart(fig_pressure, use_container_width=True)
 
     fig_flow = px.line(df, x='timestamp', y='flow_gpm', title="Flow Rate Sensor Tracking (gpm)", template="plotly_dark")
     fig_flow.update_traces(line_color='#ff9f43', line_width=2)
-    fig_flow.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+    fig_flow.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
     st.plotly_chart(fig_flow, use_container_width=True)
 
     fig_vib = px.line(df, x='timestamp', y='vibration_mms', title="Vibration Velocity Sensor Tracking (mm/s)", template="plotly_dark")
     fig_vib.update_traces(line_color='#ff6b6b', line_width=2)
-    fig_vib.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+    fig_vib.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
     st.plotly_chart(fig_vib, use_container_width=True)
 
     # 5. AI Diagnostics Panel
