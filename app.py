@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 
 # 1. Page Configuration (Industrial Dark Theme Setup)
 st.set_page_config(
@@ -9,22 +8,6 @@ st.set_page_config(
     page_icon="🏭",
     layout="wide"
 )
-
-# Custom CSS for Industrial Look & Feel
-st.markdown("""
-    <style>
-    .main {
-        background-color: #0e1117;
-        color: #ffffff;
-    }
-    .stMetric {
-        background-color: #1a1c24;
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #2f3640;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 # 2. Header & Title
 st.title("🏭 Smart Factory Control Center")
@@ -96,39 +79,43 @@ if df is not None:
 
     st.markdown("---")
 
-    # 5. Interactive Advanced Charts using Plotly (Cleaned up layout)
-    st.subheader("📈 Real-time Industrial IoT Sensor Telemetry (Time-Series)")
+    # 5. Stable Matplotlib Telemetry Chart
+    st.subheader("📈 Real-time Industrial IoT Sensor Telemetry")
     
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=df['timestamp'], y=df['pressure_psi'],
-        name='Pressure (psi)', line=dict(color='#00d2d3', width=2)
-    ))
-    fig.add_trace(go.Scatter(
-        x=df['timestamp'], y=df['flow_gpm'],
-        name='Flow (gpm)', line=dict(color='#ff9f43', width=2)
-    ))
-    fig.add_trace(go.Scatter(
-        x=df['timestamp'], y=df['vibration_mms'],
-        name='Vibration (mm/s)', line=dict(color='#ff6b6b', width=2), yaxis="y2"
-    ))
-
-    fig.update_layout(
-        template="plotly_dark",
-        height=500,
-        hovermode="x unified",
-        xaxis=dict(title="Timestamp (UTC)"),
-        yaxis=dict(title="Pressure & Flow (psi / gpm)", titlefont=dict(color="#ffffff")),
-        yaxis2=dict(title="Vibration (mm/s)", titlefont=dict(color="#ff6b6b"), overlaying="y", side="right"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+    fig.patch.set_facecolor('#0e1117')
     
+    def style_ax(ax, title):
+        ax.set_facecolor('#1a1c24')
+        ax.tick_params(colors='white')
+        ax.xaxis.label.set_color('white')
+        ax.yaxis.label.set_color('white')
+        ax.title.set_color('white')
+        ax.grid(True, color='#2f3640', linestyle='--', alpha=0.7)
+        ax.set_ylabel(title)
+
     leakage_df = df[df['status'] == 'Leakage']
-    if not leakage_df.empty:
-        fig.add_vline(x=leakage_df['timestamp'].iloc[0], line_width=2, line_dash="dash", line_color="red", annotation_text="Anomaly Detected")
+    leak_time = leakage_df['timestamp'].iloc[0] if not leakage_df.empty else None
 
-    st.plotly_chart(fig, use_container_width=True)
+    # Pressure
+    ax1.plot(df['timestamp'], df['pressure_psi'], color='#00d2d3', linewidth=2)
+    if leak_time: ax1.axvline(x=leak_time, color='red', linestyle='--', label='Anomaly')
+    style_ax(ax1, 'Pressure (psi)')
+    ax1.legend(loc='upper left')
+
+    # Flow
+    ax2.plot(df['timestamp'], df['flow_gpm'], color='#ff9f43', linewidth=2)
+    if leak_time: ax2.axvline(x=leak_time, color='red', linestyle='--')
+    style_ax(ax2, 'Flow (gpm)')
+
+    # Vibration
+    ax3.plot(df['timestamp'], df['vibration_mms'], color='#ff6b6b', linewidth=2)
+    if leak_time: ax3.axvline(x=leak_time, color='red', linestyle='--')
+    style_ax(ax3, 'Vibration (mm/s)')
+    ax3.set_xlabel('Timestamp')
+
+    plt.tight_layout()
+    st.pyplot(fig)
 
     # 6. AI Predictive Diagnostics & Action Panel
     st.markdown("---")
