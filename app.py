@@ -96,7 +96,7 @@ if df is not None:
 
     st.markdown("---")
 
-    # 5. Interactive Advanced Charts using Plotly (Fixed line parameter syntax)
+    # 5. Interactive Advanced Charts using Plotly (Cleaned up layout)
     st.subheader("📈 Real-time Industrial IoT Sensor Telemetry (Time-Series)")
     
     fig = go.Figure()
@@ -107,11 +107,11 @@ if df is not None:
     ))
     fig.add_trace(go.Scatter(
         x=df['timestamp'], y=df['flow_gpm'],
-        name='Flow (gpm)', line=dict(color='#ff9f43', width=2), yaxis="y2"
+        name='Flow (gpm)', line=dict(color='#ff9f43', width=2)
     ))
     fig.add_trace(go.Scatter(
         x=df['timestamp'], y=df['vibration_mms'],
-        name='Vibration (mm/s)', line=dict(color='#ff6b6b', width=2), yaxis="y3"
+        name='Vibration (mm/s)', line=dict(color='#ff6b6b', width=2), yaxis="y2"
     ))
 
     fig.update_layout(
@@ -119,9 +119,8 @@ if df is not None:
         height=500,
         hovermode="x unified",
         xaxis=dict(title="Timestamp (UTC)"),
-        yaxis=dict(title="Pressure (psi)", titlefont=dict(color="#00d2d3"), tickfont=dict(color="#00d2d3")),
-        yaxis2=dict(title="Flow (gpm)", titlefont=dict(color="#ff9f43"), tickfont=dict(color="#ff9f43"), anchor="free", overlaying="y", side="right"),
-        yaxis3=dict(title="Vibration (mm/s)", titlefont=dict(color="#ff6b6b"), tickfont=dict(color="#ff6b6b"), anchor="x", overlaying="y", side="right", position=0.95),
+        yaxis=dict(title="Pressure & Flow (psi / gpm)", titlefont=dict(color="#ffffff")),
+        yaxis2=dict(title="Vibration (mm/s)", titlefont=dict(color="#ff6b6b"), overlaying="y", side="right"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     
