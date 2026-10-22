@@ -9,6 +9,23 @@ st.set_page_config(
     layout="wide"
 )
 
+# Custom Clean CSS for Industrial Dark Theme
+st.markdown("""
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    .metric-card {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # 2. Load Data
 @st.cache_data
 def load_data():
@@ -41,10 +58,10 @@ if df is not None:
 
     # Main Header
     st.title("🏭 Smart Factory Control Center")
-    st.markdown("### **Unit 4: Centrifugal Pump Predictive Maintenance & Real-time SCADA**")
+    st.markdown("##### **Unit 4: Centrifugal Pump Predictive Maintenance & Real-time SCADA Dashboard**")
     st.markdown("---")
 
-    # 3. KPIs
+    # 3. KPIs Section
     latest_row = df.iloc[-1]
     col1, col2, col3, col4 = st.columns(4)
     
@@ -61,23 +78,24 @@ if df is not None:
 
     st.markdown("---")
 
-    # 4. Interactive Plotly Charts (Dark Mode Native)
+    # 4. Clean Interactive Plotly Charts
     st.subheader("📈 Real-time Industrial IoT Sensor Telemetry")
 
-    fig_pressure = px.line(df, x='timestamp', y='pressure_psi', title="Pressure Sensor Tracking (psi)", template="plotly_dark")
-    fig_pressure.update_traces(line_color='#00d2d3', line_width=2)
-    fig_pressure.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
-    st.plotly_chart(fig_pressure, use_container_width=True)
+    def create_chart(data, x_col, y_col, title, color_hex):
+        fig = px.line(data, x=x_col, y=y_col, title=title, template="plotly_dark")
+        fig.update_traces(line=dict(color=color_hex, width=2.5))
+        fig.update_layout(
+            height=320,
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#c9d1d9')
+        )
+        return fig
 
-    fig_flow = px.line(df, x='timestamp', y='flow_gpm', title="Flow Rate Sensor Tracking (gpm)", template="plotly_dark")
-    fig_flow.update_traces(line_color='#ff9f43', line_width=2)
-    fig_flow.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
-    st.plotly_chart(fig_flow, use_container_width=True)
-
-    fig_vib = px.line(df, x='timestamp', y='vibration_mms', title="Vibration Velocity Sensor Tracking (mm/s)", template="plotly_dark")
-    fig_vib.update_traces(line_color='#ff6b6b', line_width=2)
-    fig_vib.update_layout(height=280, margin=dict(l=20, r=20, t=40, b=20))
-    st.plotly_chart(fig_vib, use_container_width=True)
+    st.plotly_chart(create_chart(df, 'timestamp', 'pressure_psi', 'Pressure Sensor Tracking (psi)', '#00d2d3'), use_container_width=True)
+    st.plotly_chart(create_chart(df, 'timestamp', 'flow_gpm', 'Flow Rate Sensor Tracking (gpm)', '#ff9f43'), use_container_width=True)
+    st.plotly_chart(create_chart(df, 'timestamp', 'vibration_mms', 'Vibration Velocity Sensor Tracking (mm/s)', '#ff6b6b'), use_container_width=True)
 
     # 5. AI Diagnostics Panel
     st.markdown("---")
